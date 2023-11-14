@@ -80,22 +80,29 @@ resource "aws_security_group" "packer-sg" {
   }
 
   egress {
-    description = "for all protocols"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    description      = "for all protocols"
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
   }
 }
 
+# resource "aws_key_pair" "example_key_pair" {
+#   key_name   = "jenkins-key-pair"
+#   public_key = file("~/.ssh/id_rsa.pub")  # Replace with the path to your public key file
+# }
+
 resource "aws_instance" "ubuntu" {
-  ami           = "ami-036a958344c904ec4"
+  ami           = "ami-036a958344c904ec4" 
   instance_type = "t2.micro"
 
-  subnet_id       = aws_subnet.subnet_pub.id
-  security_groups = [aws_security_group.packer-sg.id]
+  subnet_id       = "subnet-0d8ccdbdec9e324b4"
+  security_groups = ["sg-0824d38535f914367"]
+
+#  key_name      = aws_key_pair.example_key_pair.key_name
 
   tags = {
-    "Name" = "ubuntu-jenkins"
+    "Name" = "ubuntu-jenkins01"
   }
 }
