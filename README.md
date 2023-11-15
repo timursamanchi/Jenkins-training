@@ -1,10 +1,10 @@
 # installing jenkins
-  use the packer configuration ubuntu.json file to generate an new ami image  
-  launch a new ec2 instance using the new ami image - enable ports 443,80 and 22    
-  connect to the ec2 instance and check jenkins is installed with jenkins --version command  
-  add new inbound rule to the security group for port 8080  
-  sudo cat /var/lib/jenkins/secrets/initialAdminPassword and copy it
-  from a browser enter the ip address followed :8080
+  - use the packer configuration ubuntu.json file to generate an new ami image  
+  - launch a new ec2 instance using the new ami image - enable ports 443,80 and 22    
+  - connect to the ec2 instance and check jenkins is installed with jenkins --version command  
+  - add new inbound rule to the security group for port 8080  
+  - sudo cat /var/lib/jenkins/secrets/initialAdminPassword 
+  - from a browser enter the ip address followed :8080
 
 ```
 sudo apt-get update
