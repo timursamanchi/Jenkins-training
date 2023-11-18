@@ -106,3 +106,5 @@ resource "aws_instance" "ubuntu" {
     "Name" = "ubuntu-jenkins01"
   }
 }
+
+fd7c0731623c46d197644e717d01d15e
