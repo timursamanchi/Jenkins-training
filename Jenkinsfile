@@ -1,44 +1,61 @@
 pipeline {
     agent any
 
-    environment {
-        MAX_SIZE = 10
-        MIN_SIZE = 1
-    }
-    parameters {
-        string(name: 'FATHER',
-        defaultValue: 'Vader',
-        description: 'Enter Your father’s name')
-        
-        choice(name: 'AWS_REGION',
-            choices: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2'],
-            description: 'Select the AWS region for deployment.')
+    // this section configures Jenkins options
+    options {
 
+        // only keep 10 logs for no more than 10 days
+        buildDiscarder(logRotator(daysToKeepStr: '10', numToKeepStr: '10'))
+
+        // cause the build to time out if it runs for more than 12 hours
+        timeout(time: 12, unit: 'HOURS')
+
+        // add timestamps to the log
+        timestamps()
     }
+
+    // this section configures triggers
+    triggers {
+          // create a cron trigger that will run the job every day at midnight
+          // note that the time is based on the time zone used by the server
+          // where Jenkins is running, not the user's time zone
+          cron '@midnight'
+    }
+
+    // the pipeline section we all know and love: stages! :D
     stages {
         stage('Requirements') {
             steps {
-                echo 'echo I am your father.  My name is ${params.FATHER}'
+                echo 'Installing requirements...'
             }
         }
         stage('Build') {
             steps {
-                echo "I live in ${params.AWS_REGION}"
+                echo 'Building..'
             }
         }
         stage('Test') {
             steps {
-                echo "MAX Size: ${env.MAX_SIZE}"
-                echo "MIN Size: ${env.MIN_SIZE}"
-                echo 'Testing..3'
-                input message: 'Confirm deployment to production...', ok: 'Deploy'
+                echo 'Testing..'
             }
         }
         stage('Report') {
             steps {
-                sh 'echo "Production-Report to confirm deployment.." > report.txt'
-                archiveArtifacts allowEmptyArchive: true, artifacts: '*.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                echo 'Reporting....'
             }
+        }
+    }
+
+    // the post section is a special collection of stages
+    // that are run after all other stages have completed
+    post {
+
+        // the always stage will always be run
+        always {
+
+            // the always stage can contain build steps like other stages
+            // a "steps{...}" section is not needed.
+            echo "This step will run after all other steps have finished.  It will always run, even in the status of the build is not SUCCESS"
         }
     }
 }
